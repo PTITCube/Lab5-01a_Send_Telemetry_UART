@@ -11,6 +11,9 @@
 
 void setup() {
     Serial.begin(115200);
+    while (!Serial) { delay(10); }
+
+    Serial.println("\n[VỆ TINH] Khởi tạo module LoRa phát dữ liệu...");
     Serial2.begin(9600, SERIAL_8N1, LORA_RX, LORA_TX);
     
     // Cấu hình chân Mode (M0=0, M1=0: Chế độ hoạt động bình thường Transparent Mode)
@@ -19,15 +22,21 @@ void setup() {
     digitalWrite(LORA_M0, LOW);
     digitalWrite(LORA_M1, LOW);
 
-    Serial.println("\n[RAW] LoRa UART đã sẵn sàng. Định kỳ phát sóng vô tuyến...");
+    Serial.println("[COM] LoRa Module OK");
 }
 
 void loop() {
-    String msg = "HELLO_FROM_CUBESAT_RAW_LORA: " + String(millis());
-    Serial.println("[TX] " + msg);
+    static int counter = 0;
+    counter++;
+
+    String payload = "PACKET #" + String(counter) + " - CUBESAT TELEMETRY DATA";
+    
+    Serial.print("Đang phát xuống mặt đất: ");
+    Serial.println(payload);
     
     // Đẩy trực tiếp chuỗi vào UART2 (LoRa) để phát sóng đi
-    Serial2.println(msg);
+    Serial2.println(payload);
     
-    delay(3000);
+    delay(2000);
 }
+
