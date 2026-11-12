@@ -3,6 +3,10 @@
  */
 #include <Arduino.h>
 
+#include <PTITCube.h>
+
+PTIT_CDH cdh;
+
 // Chân giao tiếp với module LoRa E32
 #define LORA_RX 26
 #define LORA_TX 27
@@ -10,10 +14,10 @@
 #define LORA_M1 35
 
 void setup() {
-    Serial.begin(115200);
-    while (!Serial) { delay(10); }
+    cdh.begin(115200);
+    while (!cdh) { delay(10); }
 
-    Serial.println("\n[VỆ TINH] Khởi tạo module LoRa phát dữ liệu...");
+    cdh.println("\n[VỆ TINH] Khởi tạo module LoRa phát dữ liệu...");
     Serial2.begin(9600, SERIAL_8N1, LORA_RX, LORA_TX);
     
     // Cấu hình chân Mode (M0=0, M1=0: Chế độ hoạt động bình thường Transparent Mode)
@@ -22,7 +26,7 @@ void setup() {
     digitalWrite(LORA_M0, LOW);
     digitalWrite(LORA_M1, LOW);
 
-    Serial.println("[COM] LoRa Module OK");
+    cdh.println("[COM] LoRa Module OK");
 }
 
 void loop() {
@@ -31,8 +35,8 @@ void loop() {
 
     String payload = "PACKET #" + String(counter) + " - CUBESAT TELEMETRY DATA";
     
-    Serial.print("Đang phát xuống mặt đất: ");
-    Serial.println(payload);
+    cdh.print("Đang phát xuống mặt đất: ");
+    cdh.println(payload);
     
     // Đẩy trực tiếp chuỗi vào UART2 (LoRa) để phát sóng đi
     Serial2.println(payload);
