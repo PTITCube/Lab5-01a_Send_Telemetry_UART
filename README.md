@@ -1,4 +1,4 @@
-# Lab 5-01a: Phát Viễn Trắc LoRa Qua UART2 (Send Telemetry LoRa Native)
+# Lab 5-01a: Phát Viễn Trắc LoRa Qua UART1 (Send Telemetry LoRa Native)
 
 > **Phân hệ:** COM (Communication System)  
 > **Thư viện yêu cầu:** `PTITCube Library v1.1.0`  
@@ -8,18 +8,19 @@
 
 ## 📖 1. Mục Tiêu & Mô Tả Bài Thực Hành
 
-Cấu hình phần cứng module thu phát không dây LoRa Ebyte E32 qua Serial2 ở tần số 433 MHz, đóng khung bản tin viễn trắc và phát sóng vô tuyến.
+Cấu hình phần cứng module thu phát không dây LoRa Ebyte E32 qua Serial1 (UART1) ở tần số 433 MHz, đóng khung bản tin viễn trắc và phát sóng vô tuyến.
 
 ---
 
-## 🔌 2. Sơ Đồ Chân Phần Cứng (Hardware Pinout)
+## 🔌 2. Sơ Đồ Chân Phần Cứng (Hardware Pinout chuẩn PTITCube.h)
 
 | Tín hiệu LoRa | Chân ESP32 | Mô tả |
 | :--- | :--- | :--- |
-| LoRa RX | GPIO 17 (TX2) | Truyền dữ liệu sang module LoRa |
-| LoRa TX | GPIO 16 (RX2) | Nhận dữ liệu từ module LoRa |
-| LoRa AUX | GPIO 4 | Chân báo trạng thái rảnh rỗi (Busy/Idle) |
-| LoRa M0, M1 | GPIO 12, GPIO 14 | Chân chọn chế độ hoạt động (Normal Mode: M0=0, M1=0) |
+| LoRa RX | GPIO 25 (TX1) | ESP32 xuất dữ liệu sang module LoRa |
+| LoRa TX | GPIO 26 (RX1) | ESP32 nhận dữ liệu từ module LoRa |
+| LoRa AUX | GPIO 27 | Chân báo trạng thái bận/rảnh (Busy/Idle) |
+| LoRa M0 | GPIO 32 | Chân cấu hình chế độ (M0=0: Normal) |
+| LoRa M1 | GPIO 33 | Chân cấu hình chế độ (M1=0: Normal) |
 
 ---
 
@@ -29,10 +30,10 @@ Cấu hình phần cứng module thu phát không dây LoRa Ebyte E32 qua Serial
   - `CDH`: Quản lý luồng xuất nhập dữ liệu `cdh` (Stream inheritance) và hệ thống tệp FAT32 trên thẻ nhớ MicroSD.
   - `EPS`: Quản lý năng lượng, đọc IC MAX17048 qua I2C.
   - `Sensor`: Đọc cụm cảm biến môi trường BMP280, cảm biến quán tính 6-DoF MPU6500, từ kế QMC5883L và định vị GNSS L76X.
-  - `COM`: Quản lý module vô tuyến LoRa Ebyte E32 qua giao tiếp UART2.
+  - `COM`: Quản lý module vô tuyến LoRa Ebyte E32 qua giao tiếp UART1.
 - **Kênh giám sát Console:**
-  - **Công cụ:** `cdh (UART0 console) + Serial2 (LoRa RF link)`
-  - **Tốc độ Baud:** `115200 bps`
+  - **Công cụ:** `cdh (UART0 console) + Serial1 (LoRa RF link)`
+  - **Tốc độ Baud:** `115200 bps` (Console) / `9600 bps` (LoRa E32)
   - **Lưu ý chuẩn hóa:** Kể từ Lab 3, mọi luồng in debug console được chuẩn hóa qua đối tượng `cdh` (`PTIT_CDH cdh;`) kế thừa trực tiếp từ lớp `Stream`/`Print` của Arduino, thay thế hoàn toàn cho `Serial` thông thường.
 
 ---
@@ -59,6 +60,6 @@ pio device monitor -b 115200
 
 ## 📝 5. Lưu Ý Kỹ Thuật
 
-- Serial2 dùng kết nối module LoRa E32, cdh dùng in trạng thái phát tin.
+- Serial1 dùng kết nối module LoRa E32, cdh dùng in trạng thái phát tin.
 - Không chèn các lệnh in `println()` trang trí dư thừa làm nghẽn bộ đệm UART khi vệ tinh vận hành ở tần số cao.
 - Kiểm tra kết nối cáp USB-UART và nguồn pin trước khi thực hiện nạp code.
