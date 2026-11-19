@@ -17,7 +17,7 @@ void setup() {
     digitalWrite(LORA_M0_PIN, LOW);
     digitalWrite(LORA_M1_PIN, LOW);
 
-    cdh.println("[COM] LoRa TX ready.");
+    cdh.println("COM: LoRa TX ready.");
 }
 
 void loop() {
@@ -25,7 +25,7 @@ void loop() {
     counter++;
 
     String payload = "PACKET #" + String(counter) + " - CUBESAT TELEMETRY";
-    cdh.println("[TX] " + payload);
+    cdh.println("TX: " + payload);
 
     Serial1.println(payload);
     delay(2000);
